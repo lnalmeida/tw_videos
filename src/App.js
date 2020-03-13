@@ -18,7 +18,7 @@ class App extends Component {
   async componentDidMount () {
     const videos = await VideoService.list()
     this.setState({ videos })
-    this.selectVideo(videos[3])
+    this.selectVideo(videos[1])
   }
 
   selectVideo (video) {
