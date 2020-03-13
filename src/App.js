@@ -3,6 +3,7 @@ import './App.css'
 import VideoList from './components/VideoList'
 import VideoPlayer from './components/VideoPlayer'
 import VideoCinema from './components/VideoCinema'
+import VideoInline from './components/VideoInline'
 import { VideoService } from './services/VideoService'
 import { Channel } from './services/EventService'
 
@@ -13,6 +14,9 @@ class App extends Component {
       videos: [],
       selectedVideo: {}
     }
+    this.inlineVideo = React.createRef()
+    this.cinemaVideo = React.createRef()
+
     this.selectVideo = this.selectVideo.bind(this)
   }
 
@@ -38,8 +42,13 @@ class App extends Component {
       <div className='App'>
         <h1>Video Player React</h1>
         <VideoPlayer video={state.selectedVideo} />
+        <VideoInline>
+          <div ref={inlineVideo} />
+        </VideoInline>
         <VideoList videos={state.videos} />
-        <VideoCinema isActive={false} />
+        <VideoCinema isActive={false}>
+          <div ref={cinemaVideo} />
+        </VideoCinema>
       </div>
     )
   }
