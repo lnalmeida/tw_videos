@@ -4,6 +4,7 @@ import VideoList from './components/VideoList'
 import VideoPlayer from './components/VideoPlayer'
 import VideoCinema from './components/VideoCinema'
 import { VideoService } from './services/VideoService'
+import { Channel } from './services/EventService'
 
 class App extends Component {
   constructor (props) {
@@ -18,7 +19,11 @@ class App extends Component {
   async componentDidMount () {
     const videos = await VideoService.list()
     this.setState({ videos })
-    this.selectVideo(videos[1])
+    Channel.on('video:select', this.selectVideo)
+  }
+
+  componentWillUnmount () {
+    Channel.removeListener('video:select', this.selectVideo)
   }
 
   selectVideo (video) {
