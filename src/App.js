@@ -43,11 +43,11 @@ class App extends Component {
         <h1>Video Player React</h1>
         <VideoPlayer video={state.selectedVideo} />
         <VideoInline>
-          <div ref={inlineVideo} />
+          <div ref={this.inlineVideo} />
         </VideoInline>
         <VideoList videos={state.videos} />
         <VideoCinema isActive={false}>
-          <div ref={cinemaVideo} />
+          <div ref={this.cinemaVideo} />
         </VideoCinema>
       </div>
     )
