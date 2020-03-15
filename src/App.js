@@ -10,24 +10,38 @@ import { Channel } from './services/EventService'
 class App extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      videos: [],
-      selectedVideo: {}
-    }
     this.inlineVideo = React.createRef()
     this.cinemaVideo = React.createRef()
 
     this.selectVideo = this.selectVideo.bind(this)
+    this.toggleCinema = this.toggleCinema.bind(this)
+
+    this.state = {
+      videos: [],
+      selectedVideo: {},
+      videoContainerElement: this.inlineVideo
+    }
   }
 
   async componentDidMount () {
     const videos = await VideoService.list()
     this.setState({ videos })
     Channel.on('video:select', this.selectVideo)
+    Channel.on('video:toggle-cinema', this.toggleCinema)
+  }
+
+  toggleCinema () {
+    const currentContainer = this.state.videoContainerElement
+    const newContainer = currentContainer === this.inlineVideo ? this.cinemaVideo : this.inlineVideo
+    this.setState({
+      videoContainerElement: newContainer
+    })
   }
 
   componentWillUnmount () {
-    Channel.removeListener('video:select', this.selectVideo)
+    Channel.removeListener('video:select', this.selectVideo) 
+    Channel.removeListener('video:toggle-cinema', this.toggleCinema)
+
   }
 
   selectVideo (video) {
@@ -40,13 +54,15 @@ class App extends Component {
     const { state } = this
     return (
       <div className='App'>
-        <h1>Video Player React</h1>
-        <VideoPlayer video={state.selectedVideo} />
+        <div>
+          <h1>Video Player React</h1>
+        </div>
+        <VideoPlayer video={state.selectedVideo} container={state.videoContainerElement.current} />
         <VideoInline>
           <div ref={this.inlineVideo} />
         </VideoInline>
         <VideoList videos={state.videos} />
-        <VideoCinema isActive={false}>
+        <VideoCinema isActive={state.videoContainerElement === this.cinemaVideo}>
           <div ref={this.cinemaVideo} />
         </VideoCinema>
       </div>
